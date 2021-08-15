@@ -10,20 +10,23 @@ app.use(cors());
 
 const commentsByPostId = {};
 
-app.get('/posts/:id/comments', (req, res) => {
-  res.send(commentsByPostId[req.params.id] || []);
-});
+// app.get('/posts/:id/comments', (req, res) => {
+//   res.send(commentsByPostId[req.params.id] || []);
+// });
 
 app.post('/posts/:id/comments', async (req, res) => {
   const commentId = randomBytes(4).toString('hex');
   const { content } = req.body;
+  const type = 'CommentCreated';
+  console.log('[event received] ', type);
 
   const comments = commentsByPostId[req.params.id] || [];
   comments.push({ id: commentId, content, status: 'pending' });
   commentsByPostId[req.params.id] = comments;
+  console.log('[event processet] ', type);
 
   await axios.post('http://localhost:4005/events', {
-    type: 'CommentCreated',
+    type: type,
     data: {
       id: commentId,
       content,
@@ -31,24 +34,26 @@ app.post('/posts/:id/comments', async (req, res) => {
       status: 'pending',
     },
   });
+  console.log('[event sent] ', type);
 
   res.status(201).send(comments);
 });
 
 app.post('/events', async (req, res) => {
-  console.log('Event Received:', req.body.type);
-
-  const { type, data } = req.body;
+  let { type, data } = req.body;
+  console.log('[event received] ', type);
 
   if (type === 'CommentModerated') {
     const { postId, id, status, content } = data;
-    const comments = commentsByPostId[postId];
 
+    const comments = commentsByPostId[postId];
     const comment = comments.find((comment) => comment.id === id);
     comment.status = status;
+    console.log('[event processet] ', type);
 
+    type = 'CommentUpdated';
     await axios.post('http://localhost:4005/events', {
-      type: 'CommentUpdated',
+      type: type,
       data: {
         id,
         status,
@@ -56,11 +61,12 @@ app.post('/events', async (req, res) => {
         content,
       },
     });
+    console.log('[event sent] ', type);
   }
 
   res.send({});
 });
 
 app.listen(4001, () => {
-  console.log('Listening on port 4001');
+  console.log('[comments up] Listening on port 4001');
 });

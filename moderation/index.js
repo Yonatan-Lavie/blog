@@ -7,9 +7,11 @@ app.use(bodyParser.json());
 
 app.post('/events', async (req, res) => {
   const { type, data } = req.body;
+  console.log('[event received] ', type);
 
   if (type === 'CommentCreated') {
     const status = data.content.includes('orange') ? 'rejected' : 'approved';
+    console.log('[event processet] ', type);
 
     await axios.post('http://localhost:4005/events', {
       type: 'CommentModerated',
@@ -20,11 +22,12 @@ app.post('/events', async (req, res) => {
         content: data.content,
       },
     });
+    console.log('[event sent] ', type);
   }
 
   res.send({});
 });
 
 app.listen(4003, () => {
-  console.log('Listening on port 4003');
+  console.log('[moderation up] Listening on port 4003');
 });

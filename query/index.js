@@ -37,21 +37,31 @@ const handleEvent = (type, data) => {
 
 app.get('/posts', (req, res) => {
   res.send(posts);
+  console.log(
+    '[data sent] ',
+    `all posts, amount: ${Object.keys(posts).length}`
+  );
 });
 
 app.post('/events', (req, res) => {
   const { type, data } = req.body;
+  console.log('[event received] ', type);
 
   handleEvent(type, data);
+  console.log('[event processet] ', type);
 
   res.send({});
 });
 
 app.listen(4002, async () => {
-  console.log('Listening on port 4002');
+  console.log('[query up] Listening on port 4002');
+  // retriveing and handling all previos events from event bus.
   const res = await axios.get('http://localhost:4005/events');
-  for (let event of res.data) {
-    console.log('[processing event] ', event.type);
+  const events = res.data;
+  console.log('[all events sent] ', `events amount ${events.length}`);
+
+  for (let event of events) {
     handleEvent(event.type, event.data);
+    console.log('[event processet] ', event.type);
   }
 });
