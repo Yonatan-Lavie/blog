@@ -56,7 +56,7 @@ app.post('/events', (req, res) => {
 app.listen(4002, async () => {
   console.log('[query up] Listening on port 4002');
   // retriveing and handling all previos events from event bus.
-  const res = await axios.get('http://localhost:4005/events');
+  const res = await axios.get('http://event-bus-srv:4005/events');
   const events = res.data;
   console.log('[all events sent] ', `events amount ${events.length}`);
 

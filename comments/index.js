@@ -25,7 +25,7 @@ app.post('/posts/:id/comments', async (req, res) => {
   commentsByPostId[req.params.id] = comments;
   console.log('[event processet] ', type);
 
-  await axios.post('http://localhost:4005/events', {
+  await axios.post('http://event-bus-srv:4005/events', {
     type: type,
     data: {
       id: commentId,
@@ -52,7 +52,7 @@ app.post('/events', async (req, res) => {
     console.log('[event processet] ', type);
 
     type = 'CommentUpdated';
-    await axios.post('http://localhost:4005/events', {
+    await axios.post('http://event-bus-srv:4005/events', {
       type: type,
       data: {
         id,
