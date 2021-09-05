@@ -15,10 +15,10 @@ app.post('/events', (req, res) => {
   events.push(event);
   console.log('[event add to array] ', req.body.type);
 
-  axios.post('http://localhost:4000/events', event);
-  axios.post('http://localhost:4001/events', event);
-  axios.post('http://localhost:4002/events', event);
-  axios.post('http://localhost:4003/events', event);
+  axios.post('http://posts-clusterip-srv:4000/events', event);
+  // axios.post('http://localhost:4001/events', event);
+  // axios.post('http://localhost:4002/events', event);
+  // axios.post('http://localhost:4003/events', event);
   console.log('[event sent] ', req.body.type);
 
   res.send({ status: 'OK' });
