@@ -12,8 +12,13 @@ const posts = {};
 const handleEvent = (type, data) => {
   switch (type) {
     case 'PostCreated': {
-      const { id, title } = data;
-      posts[id] = { id, title, comments: [] };
+      const { id, title, auther, content, likes, views } = data;
+      posts[id] = { id, title, auther, content, likes, views, comments: [] };
+      break;
+    }
+    case 'PostUpdated': {
+      const { id, title, auther, content, likes, views } = data;
+      posts[id] = { id, title, auther, content, likes, views, comments: [] };
       break;
     }
     case 'CommentCreated': {

@@ -1,16 +1,22 @@
+import { Container } from '@mui/material';
 import React from 'react';
+import Navbar from './Navbar';
 import PostCreate from './PostCreate';
 import PostList from './PostList';
 
 const App = () => {
   return (
-    <div className="container">
-      <h1>Create Post</h1>
-      <PostCreate />
-      <hr />
-      <h1>Posts</h1>
-      <PostList />
-    </div>
+    <Container style={{ display: 'flex', flexDirection: 'column' }}>
+      <Container style={{ display: 'flex' }}>
+        <Navbar />
+        <Container style={{ display: 'flex', flexDirection: 'column' }}>
+          <PostCreate />
+          <hr />
+          <h1>Posts</h1>
+          <PostList />
+        </Container>
+      </Container>
+    </Container>
   );
 };
 
